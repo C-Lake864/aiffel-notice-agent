@@ -110,8 +110,8 @@ def get_leave_procedure() -> dict:
         "source": "공가 및 휴가에 대하여",
         "apply_deadline": "발생일 +1일까지 전산 신청",
         "document_deadline": "일주일 이내",
-        "apply_form": "https://forms.gle/AMcwZYrYEcQ1mkJP9",
-        "document_form": "https://forms.gle/RxTDy1yL2PfaFbA86",
+        "apply_form": "[운영 공지의 공가 신청서 폼 참조]",
+        "document_form": "[운영 공지의 공가 증빙서류 제출 폼 참조]",
         "required_on_document": ["이름", "생년월일", "일자", "발급기관 직인"],
         "warning": "서류 미제출 시 인정 불가",
     }
@@ -317,7 +317,7 @@ def get_tool_setup(tool: Optional[str] = None) -> dict:
     tools = {
         "LMS": {"url": "https://learn.modulabs.co.kr/signin",
                 "안내": "과정 신청 시 입력한 이메일로 로그인"},
-        "디스코드": {"url": "https://discord.gg/YsBeQtmfVx",
+        "디스코드": {"url": "[운영 공지의 디스코드 초대 링크 참조]",
                   "안내": "로그인 후 공지사항의 문제를 풀면 권한이 부여됩니다",
                   "닉네임": "AI에이전트1기/이름/지역"},
         "ZEP": {"닉네임": "AI에이전트1기/이름/지역"},
