@@ -19,6 +19,14 @@ MAX_TOOL_TURNS = 4            # 도구 호출 루프 상한
 GUARDRAIL_RETRY = 1           # 가드레일 위반 시 재생성 횟수
 WORKERS = 12                  # 동시 호출 수. 요청 한도에 걸리면 낮춘다
 
+# 되묻기와 양립하는 도구들. '답을 확정하는' 도구가 아니라, 사유를 좁히거나
+# (search_leave_type) 되물을 때 어차피 함께 안내해야 하는 고정 절차를 가져오는
+# (get_leave_procedure) 도구다.
+#
+# 이 구분이 없으면 "조회를 했으니 답한 것"으로 보게 되어, 실제로는 되물었는데
+# action=ANSWER 로 기록된다. 에이전트와 채점기가 같은 기준을 써야 하므로 여기 둔다.
+NON_COMMITTING_TOOLS = {"search_leave_type", "get_leave_procedure"}
+
 ROUTES = ["ATTENDANCE", "LEAVE", "STIPEND", "RULES", "SCHEDULE", "OTHER"]
 LABELS5 = ["ATTENDANCE", "LEAVE", "STIPEND", "RULES", "SCHEDULE"]
 
@@ -33,7 +41,8 @@ ROUTE_KO = {
 
 DATA_FILES = ("notice_manual.md", "leave_types.json", "schedule.json",
               "unit_periods.json", "employment_docs.json",
-              "routing_eval.csv", "answer_goldenset.json")
+              "routing_eval.csv", "answer_goldenset.json",
+              "multiturn_goldenset.json")
 
 
 def check_data():

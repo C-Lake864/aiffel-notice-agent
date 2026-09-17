@@ -9,6 +9,7 @@ from typing import Annotated, List, Optional, TypedDict
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import END, START, StateGraph
 
+from config import NON_COMMITTING_TOOLS
 from answer import answer_with_tools
 from guardrail import guardrail
 from router import app as router_app
@@ -65,9 +66,12 @@ def node_answer(state: AgentState) -> AgentState:
     if results.get("escalate_to_manager", {}).get("escalated"):
         return {"action": "ESCALATE", "tools": list(results), "results": results,
                 "answer": text, "history": [state["question"]]}
-    if not results:                       # 조회할 단서가 없어 모델이 되물은 경우
-        return {"action": "ASK", "tools": [], "results": {}, "answer": text,
-                "history": [state["question"]]}
+    # 되묻기 판정 — '답을 확정하는 도구'를 하나도 부르지 않았으면 되물은 것이다.
+    # `not results` 로만 보면, 사유를 좁히려 search_leave_type 을 부른 뒤 되묻는 경우가
+    # ANSWER 로 잘못 기록된다("어떤 시험인지 알려주시겠어요?" 인데 action=ANSWER).
+    if not (set(results) - NON_COMMITTING_TOOLS):
+        return {"action": "ASK", "tools": list(results), "results": results,
+                "answer": text, "history": [state["question"]]}
     return {"tools": list(results), "results": results, "answer": text,
             "history": [state["question"]],
             "attempts": state.get("attempts", 0) + 1}

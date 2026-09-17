@@ -1,0 +1,136 @@
+{
+ "$comment": "멀티턴 평가셋. 1턴 골든셋으로는 잡히지 않는 것들만 모았다 — 대명사 풀기, 주제 전환, 조건 보충, 턴 간 상태 누수. 실제로 이 사각지대에서 버그 두 개가 나왔고(주제 전환 실패, tools 누수) 그래서 만들었다.",
+ "version": "1.0",
+ "as_of_date": "2026-09-17",
+ "schema": {
+  "turns": "고객 발화를 순서대로. 같은 thread_id 로 이어서 보낸다.",
+  "expect": "턴마다의 기대. 검사하지 않을 턴은 null 을 넣는다.",
+  "action": "ANSWER / ASK / OUT_OF_SCOPE",
+  "tools": "그 턴에 반드시 호출되어야 하는 도구",
+  "forbid_tools": "그 턴에 호출되면 안 되는 도구. 앞 턴의 주제로 조회하는 것을 잡는다.",
+  "must": "답변에 반드시 들어가야 하는 문자열",
+  "forbid": "답변에 있으면 안 되는 문자열"
+ },
+ "conversations": [
+  {
+   "conv_id": "M-001",
+   "kind": "주제 전환",
+   "note": "앞 턴이 질병이어도 이번 턴은 시험으로 조회해야 한다. 실제로 여기서 버그가 나왔다.",
+   "turns": [
+    {
+     "text": "아이가 아파서 병원에 데려가야 하는데 공가 되나요?",
+     "expect": {"action": "ANSWER", "tools": ["get_leave_detail"],
+                "must": ["19세"], "forbid": []}
+    },
+    {
+     "text": "시험 때문에 공가 쓰려는데 며칠 인정되나요?",
+     "expect": {"action": "ASK", "tools": [],
+                "forbid_tools": ["get_leave_detail"],
+                "must": [], "forbid": ["19세", "가족관계증명서"]}
+    }
+   ]
+  },
+  {
+   "conv_id": "M-002",
+   "kind": "대명사 풀기",
+   "note": "'그건 며칠까지요?' 는 앞 턴의 사유를 가리킨다. 앞 턴을 봐야 답할 수 있다.",
+   "turns": [
+    {
+     "text": "예비군 훈련 가면 공가 되나요?",
+     "expect": {"action": "ANSWER", "tools": ["get_leave_detail"],
+                "must": ["소요일"], "forbid": []}
+    },
+    {
+     "text": "그럼 증빙은 뭘 내야 하죠?",
+     "expect": {"action": "ANSWER", "tools": [],
+                "must": ["예비군 훈련 증명서"], "forbid": ["청첩장", "진료확인서"]}
+    }
+   ]
+  },
+  {
+   "conv_id": "M-003",
+   "kind": "조건 보충",
+   "note": "되물은 뒤 조건이 채워지면 그 조건으로 답해야 한다.",
+   "turns": [
+    {
+     "text": "시험 때문에 공가 쓰려는데 며칠 인정되나요?",
+     "expect": {"action": "ASK", "tools": [], "must": [], "forbid": []}
+    },
+    {
+     "text": "자격증 시험이요",
+     "expect": {"action": "ANSWER", "tools": ["get_leave_detail"],
+                "must": ["소요일", "응시확인서"], "forbid": ["면접 확인서"]}
+    }
+   ]
+  },
+  {
+   "conv_id": "M-004",
+   "kind": "상태 누수",
+   "note": "조회 없이 끝나는 턴에서 앞 턴의 tools 가 따라붙으면 안 된다. 실제로 여기서 버그가 나왔다.",
+   "turns": [
+    {
+     "text": "주 15시간 미만으로 일하는데 산재보험에 가입했어요. 괜찮나요?",
+     "expect": {"action": "ANSWER", "tools": ["get_side_job_rule"],
+                "must": ["특수형태근로종사자"], "forbid": []}
+    },
+    {
+     "text": "제 출석률이 지금 몇 퍼센트인가요?",
+     "expect": {"action": "OUT_OF_SCOPE", "tools": [],
+                "forbid_tools": ["get_side_job_rule", "get_attendance_rule"],
+                "must": ["운영매니저"], "forbid": ["%입니다"]}
+    }
+   ]
+  },
+  {
+   "conv_id": "M-005",
+   "kind": "담당 전환",
+   "note": "출결 이야기에서 장려금 이야기로 넘어가면 라우트도 바뀌어야 한다.",
+   "turns": [
+    {
+     "text": "10시 10분에 입실하면 지각인가요?",
+     "expect": {"action": "ANSWER", "tools": ["get_attendance_rule"],
+                "must": ["10:10"], "forbid": []}
+    },
+    {
+     "text": "그럼 지각하면 장려금은 어떻게 되나요?",
+     "expect": {"action": "ANSWER", "tools": ["get_stipend_policy"],
+                "must": ["80"], "forbid": []}
+    }
+   ]
+  },
+  {
+   "conv_id": "M-006",
+   "kind": "되묻기 후 이탈",
+   "note": "되물었는데 고객이 다른 이야기를 하면, 앞의 되묻기에 매달리지 말고 새 주제로 답한다.",
+   "turns": [
+    {
+     "text": "일정 좀 알려주세요",
+     "expect": {"action": "ASK", "tools": [], "must": [], "forbid": []}
+    },
+    {
+     "text": "아 그냥 됐고, 휴가는 몇 일까지 쓸 수 있어요?",
+     "expect": {"action": "ANSWER", "tools": ["get_leave_detail"],
+                "forbid_tools": ["get_schedule"],
+                "must": ["단위 기간 내 1일"], "forbid": []}
+    }
+   ]
+  },
+  {
+   "conv_id": "M-007",
+   "kind": "규정 두 곳 결합",
+   "note": "앞 턴은 제적 기준(규칙), 이번 턴은 단위기간 일수(과정 정보). 두 곳을 이어야 답이 된다.",
+   "turns": [
+    {
+     "text": "단위기간에 며칠 빠지면 제적 사유가 되나요?",
+     "expect": {"action": "ANSWER", "tools": ["get_rule_violation"],
+                "must": ["50"], "forbid": ["제적되셨습니다"]}
+    },
+    {
+     "text": "9월 20일이면 그 단위기간은 며칠짜리인가요?",
+     "expect": {"action": "ANSWER", "tools": ["get_unit_period"],
+                "must": ["19"], "forbid": []}
+    }
+   ]
+  }
+ ]
+}
