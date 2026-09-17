@@ -32,15 +32,31 @@ class AgentState(TypedDict, total=False):
 
 
 def with_history(state: AgentState) -> str:
-    """앞 턴의 발화를 앞에 붙인다. 대화가 없으면 이번 발화 그대로."""
+    """앞 턴의 발화를 맥락으로 덧붙인다. 대화가 없으면 이번 발화 그대로.
+
+    앞 턴과 이번 턴을 **구분 없이 이어 붙이면 안 된다.** 그냥 붙이면
+    "아이가 아파서 병원에… / 시험 때문에 공가…" 가 한 문장이 되어, 주제가 바뀌었는데도
+    앞 주제(질병)로 조회해 엉뚱한 답이 나간다. 라벨을 붙여 무엇이 이번 질문인지 밝힌다.
+    """
     prior = state.get("history") or []
-    return " ".join(prior + [state["question"]])
+    if not prior:
+        return state["question"]
+    lines = [f"[이전 문의 {i}] {q}" for i, q in enumerate(prior[-3:], 1)]
+    lines.append(f"[이번 문의] {state['question']}")
+    return "\n".join(lines)
 
 
 def node_route(state):
-    """① 분류 — 라우터 그래프를 그대로 부른다."""
+    """① 분류 — 라우터 그래프를 그대로 부른다. 턴마다 상태를 여기서 초기화한다.
+
+    history 를 빼면 State 는 checkpointer 에 그대로 남아 다음 턴으로 넘어온다. 초기화하지
+    않으면 조회 없이 끝나는 턴(응대 범위 밖·이관)에서 **앞 턴의 tools·results 가 그대로
+    표시되어**, 부르지도 않은 도구를 부른 것처럼 보인다.
+    """
     r = router_app.invoke({"question": with_history(state)})
-    return {"route": r["route"], "confidence": r["confidence"], "action": r["action"]}
+    return {"route": r["route"], "confidence": r["confidence"], "action": r["action"],
+            "tools": [], "results": {}, "answer": "",
+            "guardrail_ok": None, "violations": [], "attempts": 0}
 
 
 def node_answer(state: AgentState) -> AgentState:
