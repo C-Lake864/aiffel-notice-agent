@@ -1,0 +1,59 @@
+{
+ "source": "주요 공지 모음 > AI 에이전트 훈련 정보",
+ "course": "AI 에이전트 서비스 개발자 과정(1회차)",
+ "period": {
+  "start": "2026-07-08",
+  "end": "2027-01-08",
+  "total_training_days": 120
+ },
+ "daily": {
+  "start": "10:00",
+  "end": "18:00",
+  "hours": 7,
+  "lunch": "13:00~14:00"
+ },
+ "units": [
+  {
+   "unit": 1,
+   "start": "2026-07-08",
+   "end": "2026-07-31",
+   "training_days": 17
+  },
+  {
+   "unit": 2,
+   "start": "2026-08-10",
+   "end": "2026-09-07",
+   "training_days": 20
+  },
+  {
+   "unit": 3,
+   "start": "2026-09-08",
+   "end": "2026-10-07",
+   "training_days": 19
+  },
+  {
+   "unit": 4,
+   "start": "2026-10-08",
+   "end": "2026-11-06",
+   "training_days": 21
+  },
+  {
+   "unit": 5,
+   "start": "2026-11-09",
+   "end": "2026-12-07",
+   "training_days": 21
+  },
+  {
+   "unit": 6,
+   "start": "2026-12-08",
+   "end": "2027-01-07",
+   "training_days": 21
+  },
+  {
+   "unit": 7,
+   "start": "2027-01-08",
+   "end": "2027-01-08",
+   "training_days": 1
+  }
+ ]
+}

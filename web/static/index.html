@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 에이전트 1기 안내봇</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ground:#F2F4F9; --surface:#fff; --sunk:#EAEDF5;
+  --ink:#191D2B; --soft:#5A6076; --faint:#878DA1;
+  --rule:#D9DEEA; --accent:#3A45A8; --accent-soft:#E7E9F8;
+  --ok:#00806A; --ok-soft:#E0F1ED; --warn:#C2670E; --warn-soft:#FAEEDF;
+  --sans:"IBM Plex Sans KR",system-ui,-apple-system,"Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#13151C; --surface:#1C1F28; --sunk:#15171F;
+    --ink:#E9EBF2; --soft:#A3A9BC; --faint:#787E92;
+    --rule:#2E3340; --accent:#8E99F0; --accent-soft:#252A44;
+    --ok:#2FA893; --ok-soft:#142C28; --warn:#C87F2E; --warn-soft:#302517;
+  }
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:15px; line-height:1.7;
+  display:flex; flex-direction:column;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+header{
+  background:var(--surface); border-bottom:1px solid var(--rule);
+  padding:14px 20px; display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+}
+header h1{font-size:17px; margin:0; font-weight:700}
+header .sub{font-size:12.5px; color:var(--faint)}
+header .src{font-family:var(--mono); font-size:11px; color:var(--faint); margin-left:auto}
+
+main{flex:1; overflow-y:auto; padding:20px}
+.inner{max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:16px}
+
+.intro{
+  background:var(--surface); border:1px solid var(--rule); border-radius:12px;
+  padding:16px 18px; display:flex; flex-direction:column; gap:10px;
+}
+.intro p{margin:0; font-size:14px; color:var(--soft)}
+.intro b{color:var(--ink)}
+.chips{display:flex; flex-wrap:wrap; gap:7px}
+.chip{
+  font:inherit; font-size:13px; cursor:pointer;
+  background:var(--sunk); color:var(--ink);
+  border:1px solid var(--rule); border-radius:99px; padding:5px 12px;
+  display:inline-flex; align-items:center; gap:7px;
+}
+.chip:hover{border-color:var(--accent); color:var(--accent)}
+.chip .tag{font-size:10.5px; color:var(--faint); font-family:var(--mono)}
+
+.turn{display:flex; flex-direction:column; gap:8px}
+.bubble{border-radius:12px; padding:12px 15px; max-width:88%; white-space:pre-wrap; word-break:break-word}
+.me{align-self:flex-end; background:var(--accent-soft); color:var(--ink)}
+.bot{align-self:flex-start; background:var(--surface); border:1px solid var(--rule)}
+.bubble a{color:var(--accent)}
+.bubble code{
+  font-family:var(--mono); font-size:.88em; background:var(--sunk);
+  padding:1px 5px; border-radius:4px;
+}
+.me code{background:rgba(0,0,0,.07)}
+
+.trace{
+  align-self:flex-start; max-width:88%;
+  font-family:var(--mono); font-size:11.5px; color:var(--faint);
+  background:var(--sunk); border-radius:9px; padding:8px 12px;
+  overflow-x:auto; white-space:nowrap;
+}
+.pill{
+  display:inline-block; padding:1px 7px; border-radius:99px;
+  font-size:11px; font-weight:500; margin-right:5px;
+}
+.p-ok{background:var(--ok-soft); color:var(--ok)}
+.p-warn{background:var(--warn-soft); color:var(--warn)}
+.p-route{background:var(--accent-soft); color:var(--accent)}
+.viol{color:var(--warn); white-space:normal}
+
+footer{
+  background:var(--surface); border-top:1px solid var(--rule); padding:12px 20px;
+}
+form{max-width:760px; margin:0 auto; display:flex; gap:9px}
+input[type=text]{
+  flex:1; font:inherit; padding:11px 14px; border-radius:10px;
+  border:1px solid var(--rule); background:var(--ground); color:var(--ink);
+}
+input[type=text]:focus{outline:2px solid var(--accent); outline-offset:1px; border-color:transparent}
+button.send{
+  font:inherit; font-weight:600; padding:11px 20px; border:none; border-radius:10px;
+  background:var(--accent); color:#fff; cursor:pointer;
+}
+button.send:disabled{opacity:.5; cursor:default}
+.dots::after{content:"·"; animation:d 1.2s steps(4,end) infinite}
+@keyframes d{0%{content:"·"}25%{content:"··"}50%{content:"···"}75%{content:"····"}}
+@media (prefers-reduced-motion:reduce){.dots::after{animation:none;content:"···"}}
+@media (max-width:520px){ .bubble,.trace{max-width:100%} header .src{display:none} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AI 에이전트 1기 안내봇</h1>
+  <span class="sub">출결 · 공가 · 장려금 · 규칙 · 일정</span>
+  <span class="src">근거: 주요 공지 모음</span>
+</header>
+
+<main>
+  <div class="inner" id="feed">
+    <div class="intro">
+      <p><b>훈련 공지에 근거해서만 답합니다.</b> 답변 아래 회색 줄에 어떤 담당으로 분류했는지,
+        무엇을 조회했는지, 가드레일을 통과했는지가 함께 나옵니다.
+        개인별 출결 기록·장려금 금액은 확인할 수 없어 운영매니저로 안내합니다.</p>
+      <div class="chips" id="chips"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <form id="form">
+    <input type="text" id="q" name="q" autocomplete="off" placeholder="문의를 입력하세요 (예: 공가 신청은 언제까지 하나요?)">
+    <button class="send" id="send" type="submit">보내기</button>
+  </form>
+</footer>
+
+<script>
+const feed = document.getElementById('feed');
+const form = document.getElementById('form');
+const input = document.getElementById('q');
+const send = document.getElementById('send');
+let threadId = null;
+
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => (
+  {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// 모델이 `코드`·**굵게** 같은 마크다운을 섞어 쓴다. 그대로 두면 기호가 글자로 보인다.
+// esc() 로 이스케이프한 뒤에 변환하므로 HTML 주입 위험은 없다.
+const render = s => esc(s)
+  .replace(/(https?:\/\/[^\s)]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
+  .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+  .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+
+function addTurn(html){
+  const d = document.createElement('div');
+  d.className = 'turn';
+  d.innerHTML = html;
+  feed.appendChild(d);
+  d.scrollIntoView({block:'end'});
+  return d;
+}
+
+fetch('/api/examples').then(r => r.json()).then(d => {
+  document.getElementById('chips').innerHTML = d.examples.map(e =>
+    `<button class="chip" type="button" data-q="${esc(e.q)}">${esc(e.q)}<span class="tag">${esc(e.tag)}</span></button>`
+  ).join('');
+  document.querySelectorAll('.chip').forEach(b =>
+    b.addEventListener('click', () => { input.value = b.dataset.q; form.requestSubmit(); }));
+});
+
+form.addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+  send.disabled = true;
+
+  addTurn(`<div class="bubble me">${esc(q)}</div>`);
+  const pending = addTurn(`<div class="bubble bot"><span class="dots">확인 중</span></div>`);
+
+  try {
+    const res = await fetch('/api/ask', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({question:q, thread_id:threadId})
+    });
+    if (!res.ok) throw new Error('서버 응답 ' + res.status);
+    const d = await res.json();
+    threadId = d.thread_id;
+
+    const conf = d.confidence == null ? '-' : d.confidence.toFixed(2);
+    const gr = d.guardrail_ok === true
+      ? '<span class="pill p-ok">가드레일 통과</span>'
+      : (d.guardrail_ok === false ? '<span class="pill p-warn">가드레일 위반</span>' : '');
+    const route = d.route
+      ? `<span class="pill p-route">${esc(d.route_ko || d.route)}</span>` : '';
+    const viol = (d.violations || []).map(v =>
+      `<div class="viol">⚠ ${esc(v.type)}: ${esc(v.detail)}</div>`).join('');
+
+    pending.innerHTML =
+      `<div class="bubble bot">${render(d.answer)}</div>` +
+      `<div class="trace">${route}${gr}` +
+      `route=${esc(d.route)} conf=${conf} action=${esc(d.action)} ` +
+      `tools=[${(d.tools||[]).map(esc).join(', ')}]${viol}</div>`;
+  } catch (err) {
+    pending.innerHTML =
+      `<div class="bubble bot">답변을 가져오지 못했습니다. 서버가 켜져 있는지 확인한 뒤 다시 보내 주세요.</div>` +
+      `<div class="trace viol">${esc(err.message)}</div>`;
+  } finally {
+    send.disabled = false;
+    input.focus();
+  }
+});
+</script>
+</body>
+</html>

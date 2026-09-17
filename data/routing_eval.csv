@@ -1,0 +1,77 @@
+qa_id,question,route,difficulty,split,note
+R001,10시 10분에 입실하면 지각인가요?,ATTENDANCE,easy,fewshot,시각 기준 문의
+R002,퇴실 체크는 몇 시부터 할 수 있나요?,ATTENDANCE,easy,fewshot,시각 기준 문의
+R003,예비군 훈련 가면 출석 인정되나요?,LEAVE,easy,fewshot,사유+출석인정
+R004,결혼식 때문에 공가 쓰려면 뭘 내야 하죠?,LEAVE,easy,fewshot,증빙서류 문의
+R005,훈련장려금은 하루에 얼마인가요?,STIPEND,easy,fewshot,금액 문의
+R006,카메라를 꼭 켜야 하나요?,RULES,easy,fewshot,규칙 문의
+R007,다음 주 월요일 수업 뭐 하나요?,SCHEDULE,easy,fewshot,일정 문의
+R008,디스코드 닉네임은 어떻게 설정하나요?,SCHEDULE,easy,fewshot,툴 세팅
+R009,몇 퍼센트 출석해야 수료인가요?,SCHEDULE,easy,fewshot,수료 기준은 과정 정보
+R010,결석이 며칠 넘으면 제적되나요?,RULES,easy,fewshot,제적 기준
+R011,아르바이트를 해도 되나요?,STIPEND,easy,fewshot,고용형태
+R012,공가 신청은 언제까지 해야 하나요?,LEAVE,easy,fewshot,신청 기한
+R013,외출은 몇 시까지 복귀해야 하나요?,ATTENDANCE,easy,eval,시각 기준
+R014,입실하고 잠깐 자리 비워도 되나요?,ATTENDANCE,easy,eval,20분 기준
+R015,지각을 세 번 하면 어떻게 되나요?,ATTENDANCE,easy,eval,3회 누적
+R016,오후 3시에 퇴실하면 조퇴인가요 결석인가요?,ATTENDANCE,easy,eval,시각 판정
+R017,퇴실 체크를 깜빡했는데 출석 되나요?,ATTENDANCE,medium,eval,퇴실 미진행 판정
+R018,점심시간은 몇 시부터인가요?,ATTENDANCE,easy,eval,일과 시각
+R019,10시 30분에 들어가면 어떻게 처리되나요?,ATTENDANCE,easy,eval,시각 판정
+R020,출결 앱은 어디서 받나요?,SCHEDULE,medium,eval,툴 세팅이지 출결 판정이 아님
+R021,병원 가느라 오전에 못 들어가는데 출석 인정받을 수 있나요?,LEAVE,medium,eval,사유+인정
+R022,자격증 시험 보는 날 공가 되나요?,LEAVE,easy,eval,사유 문의
+R023,입사 면접이 있는데 며칠까지 인정되나요?,LEAVE,easy,eval,인정일수
+R024,아이가 아파서 병원에 데려가야 하는데 공가 되나요?,LEAVE,hard,eval,자녀 진료 조건
+R025,진료비 영수증으로 증빙해도 되나요?,LEAVE,hard,eval,영수증 불가 규정
+R026,휴가는 한 달에 며칠까지 쓸 수 있나요?,LEAVE,medium,eval,단위기간 기준
+R027,다음 달 휴가를 당겨서 써도 되나요?,LEAVE,hard,eval,당겨쓰기 불가
+R028,증빙서류는 언제까지 내야 하나요?,LEAVE,easy,eval,제출 기한
+R029,공가 서류에 뭐가 꼭 들어가야 하나요?,LEAVE,medium,eval,필수 기재사항
+R030,해커톤 나가면 출석 인정되나요?,LEAVE,medium,eval,정부 주최 조건
+R031,할아버지 상을 당했는데 며칠 인정되나요?,LEAVE,hard,eval,조부모 3일
+R032,공가 신청서는 어디에 제출하나요?,LEAVE,easy,eval,제출 폼
+R033,단위기간에 80% 못 채우면 장려금 못 받나요?,STIPEND,medium,eval,지급 조건
+R034,이번 단위기간이 22일인데 장려금은 22일치 나오나요?,STIPEND,hard,eval,20일 상한
+R035,장려금은 신청하고 얼마나 걸리나요?,STIPEND,easy,eval,소요기간
+R036,주 10시간 알바하면 장려금 받을 수 있나요?,STIPEND,hard,eval,15시간 미만
+R037,프리랜서 계약을 하게 됐는데 알려야 하나요?,STIPEND,medium,eval,특수형태근로
+R038,국민취업지원제도랑 같이 받아도 되나요?,STIPEND,hard,eval,중복 수급 가능
+R039,지자체 구직활동 지원금 받고 있는데 괜찮나요?,STIPEND,hard,eval,중복 수급 불가
+R040,재학생인데 무슨 서류를 내야 하나요?,STIPEND,medium,eval,최초 제출 서류
+R041,회사 그만두고 실업자가 됐는데 뭘 제출하죠?,STIPEND,medium,eval,변경 서류
+R042,산재보험만 들었는데 장려금에 영향 있나요?,STIPEND,hard,eval,특수형태근로 함정
+R043,수업 중에 마이크를 안 켜면 문제되나요?,RULES,medium,eval,규칙
+R044,QR코드를 캡처해 뒀다가 찍어도 되나요?,RULES,medium,eval,부정 출석
+R045,카페에서 출석 체크해도 되나요?,RULES,hard,eval,지정 장소
+R046,지하철에서 QR 찍으면 안 되나요?,RULES,medium,eval,운송수단
+R047,경고를 받으면 바로 제적인가요?,RULES,medium,eval,경고 절차
+R048,단위기간에 며칠 빠지면 제적 사유가 되나요?,RULES,hard,eval,50% 기준
+R049,다른 사람 발표 화면을 캡처해도 되나요?,RULES,medium,eval,개인정보
+R050,조별 과제에서 갈등이 생기면 어떻게 하나요?,RULES,medium,eval,규칙 위반 신고
+R051,말없이 30분 자리를 비우면 어떻게 되나요?,RULES,hard,eval,무단 외출 간주
+R052,제적되는 기준이 법에 정해져 있나요?,RULES,medium,eval,법령 근거
+R053,7월 17일에 수업 있나요?,SCHEDULE,easy,eval,휴강일
+R054,해커톤은 언제 하나요?,SCHEDULE,medium,eval,모듈 일정
+R055,메인퀘스트는 몇 번 있나요?,SCHEDULE,medium,eval,일정 집계
+R056,졸업하려면 뭐가 필요한가요?,SCHEDULE,medium,eval,졸업 기준
+R057,LMS 주소가 어떻게 되나요?,SCHEDULE,easy,eval,툴
+R058,과정이 언제 끝나나요?,SCHEDULE,easy,eval,과정 정보
+R059,ZEP 닉네임 규칙이 뭐예요?,SCHEDULE,easy,eval,툴
+R060,프롬프트 엔지니어링 모듈은 며칠짜리인가요?,SCHEDULE,hard,eval,모듈 일정 집계
+R061,제 출석률이 지금 몇 퍼센트인가요?,OTHER,easy,eval,개인 기록
+R062,이번 달 제 장려금이 왜 이 금액이죠?,OTHER,medium,eval,개인 기록
+R063,내일배움카드 잔액은 어디서 보나요?,OTHER,medium,eval,고용센터
+R064,출결 앱에 오류가 나서 체크가 안 돼요,OTHER,hard,eval,앱 자체 오류
+R065,제가 지금까지 결석 몇 번 했나요?,OTHER,easy,eval,개인 기록
+R066,다른 기관 KDT 과정도 같이 들어도 되나요?,STIPEND,hard,eval,타 부처 중복 참여 신고
+R067,취업 자리를 소개해 주실 수 있나요?,OTHER,medium,eval,취업 알선
+R068,14시 20분에 나가면 결석인가요?,ATTENDANCE,medium,eval,50% 경계
+R069,공가 쓴 날도 장려금 계산에 들어가나요?,STIPEND,hard,eval,출결과 장려금 경계
+R070,수술받고 입원했는데 며칠까지 인정되나요?,LEAVE,medium,eval,질병 인정일수
+R071,외출했다가 복귀 체크를 안 하면 어떻게 되나요?,ATTENDANCE,hard,eval,외출 미복귀는 결석
+R072,오전에 4시간 외출하면 그날은 결석 처리인가요?,ATTENDANCE,hard,eval,외출이 출석시간 50% 초과
+R073,17시 45분에 퇴실하면 조퇴로 잡히나요?,ATTENDANCE,medium,eval,조퇴 경계
+R074,병원 다녀오느라 지각했는데 그것도 공결이 되나요?,LEAVE,hard,eval,질병은 지각·조퇴·외출도 공결 인정
+R075,휴학생인데 제출할 서류가 있나요?,STIPEND,easy,eval,최초 제출 서류
+R076,수업 태도가 나쁘면 그것만으로도 제적되나요?,RULES,medium,eval,35조 2항 사전 서면 통보 조건
